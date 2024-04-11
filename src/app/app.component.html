@@ -1,5 +1,29 @@
-<main class="main">
-    <app-navigation-bar></app-navigation-bar>
-    <!-- <app-main-page></app-main-page> -->
-</main>
+<app-navigation-bar></app-navigation-bar>
+
+<header>
+    <nav class="navbar navbar-dark bg-dark">
+      <a class="navbar-brand" routerLink="/">Home</a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/signup">Sign Up</a>
+        </li>
+        <!-- <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" (click)="logout()">Logout</a>
+        </li> -->
+      </ul>
+    </nav>
+  </header>
+  
+  <main>
+    <div class="banner">
+      <h1>Welcome to My Website</h1>
+    </div>
+    
+    <div class="auth-section">
+      <!-- <router-outlet></router-outlet> -->
+    </div>
+  </main>
 

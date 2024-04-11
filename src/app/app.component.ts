@@ -1,11 +1,23 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AuthService } from './services/auth/auth.service';
+import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
 
 @Component({
   selector: 'app-root',
+  imports: [NavigationBarComponent],
+  standalone: true,
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'been-to';
+  isLoggedIn: boolean;
+
+  constructor(private authService: AuthService) {
+    this.isLoggedIn = this.authService.isLoggedIn();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.isLoggedIn = false;
+  }
 }

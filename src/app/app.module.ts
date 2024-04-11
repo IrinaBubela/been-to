@@ -1,15 +1,38 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
-import { MainPageComponent } from './main-page/main-page.component';
+import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './login/login.component';
+import { SignupComponent } from './signup/signup.component';
 import { NavigationBarComponent } from './navigation-bar/navigation-bar.component';
+import { CommonModule } from '@angular/common';
+import { AuthService } from './services/auth/auth.service';
+
+const routes: Routes = [
+  { path: '', component: AppComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'signup', component: SignupComponent }
+];
 
 @NgModule({
-  declarations: [ AppComponent ],
-  imports: [
-    CommonModule,
-    MainPageComponent,
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SignupComponent,
+    HomeComponent,
     NavigationBarComponent,
-  ]
+    AuthService
+  ],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes),
+    CommonModule,
+    AuthService
+  ], 
+  exports: [CommonModule],
+  providers: [AuthService],
+  bootstrap: [],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
