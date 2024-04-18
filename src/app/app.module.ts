@@ -22,17 +22,12 @@ const routes: Routes = [
     SignupComponent,
     HomeComponent,
     NavigationBarComponent,
-    AuthService
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(routes),
-    CommonModule,
-    AuthService
-  ], 
-  exports: [CommonModule],
+  ],
   providers: [AuthService],
-  bootstrap: [],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  bootstrap: [AppComponent],
 })
 export class AppModule { }
