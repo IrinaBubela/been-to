@@ -1,28 +1,37 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
-  private loggedInSubject: BehaviorSubject<boolean>;
-  public loggedIn$: Observable<boolean>;
+  private loggedInSubject = new BehaviorSubject<boolean>(false);
 
-  constructor() {
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    this.loggedInSubject = new BehaviorSubject<boolean>(isLoggedIn);
-    this.loggedIn$ = this.loggedInSubject.asObservable();
+  constructor(private http: HttpClient) {}
+
+  public login(username: string, password: string): Observable<boolean> {
+    return this.http.post<any>('/api/login', { username, password })
+      .pipe(
+        map(response => {
+          if (response && response.token) {
+            localStorage.setItem('currentUser', JSON.stringify(response.token));
+            this.loggedInSubject.next(true);
+            return true;
+          } else {
+            return false;
+          }
+        })
+      );
   }
 
-  login() {
-    localStorage.setItem('isLoggedIn', 'true');
-    this.loggedInSubject.next(true);
-  }
-
-  logout() {
-    localStorage.removeItem('isLoggedIn');
+  public logout(): void {
+    localStorage.removeItem('currentUser');
     this.loggedInSubject.next(false);
   }
 
-  isLoggedIn(): boolean {
-    return this.loggedInSubject.value;
+  public isLoggedIn(): Observable<boolean> {
+    return this.loggedInSubject.asObservable();
   }
 }
