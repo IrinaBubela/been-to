@@ -1,0 +1,5 @@
+<div *ngIf="(selectedCountry$ | async) as selectedCountry">
+    <h2>Selected Country: {{ selectedCountry.name }}</h2>
+    <p>Login: {{ selectedCountry.login }}</p>
+    <p>Password: {{ selectedCountry.password }}</p>
+</div>
