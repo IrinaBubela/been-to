@@ -1,2 +1,8 @@
-<app-selected-country></app-selected-country>
 <div id="map"></div>
+
+<ul>
+    <li *ngFor="let country of (countries$ | async)">
+      {{country}}
+        {{ country.id }}
+    </li>
+  </ul>

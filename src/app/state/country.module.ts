@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { StoreModule } from '@ngrx/store';
-import { countryReducer } from './country.reducer';
+import { reducer } from './country.reducer';
 
 @NgModule({
   imports: [
-    StoreModule.forFeature('country', countryReducer)
-  ]
+    StoreModule.forFeature('map', reducer)
+  ],
 })
-export class CountryModule {}
+export class MapModule {}

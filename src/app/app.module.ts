@@ -1,12 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './components/login/login.component';
-import { SignupComponent } from './signup/signup.component';
-import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
+import { SignupComponent } from './components/signup/signup.component';
 import { AuthService } from './services/auth/auth.service';
-import { AppComponent } from './app.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StoreModule } from '@ngrx/store';
+import { AppComponent } from './app.component';
+import { reducer } from './state/country.reducer';
 
 const routes: Routes = [
   { path: '', component: AppComponent },
@@ -16,24 +17,17 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent,
     LoginComponent,
-    SignupComponent,
-    NavigationBarComponent,
+    SignupComponent
   ],
   imports: [
     CommonModule,
     BrowserModule,
     RouterModule.forRoot(routes),
-  ],
-  exports: [
-    AppComponent,
-    LoginComponent,
-    SignupComponent,
-    NavigationBarComponent,
+    StoreModule.forRoot({ 'countryStore': reducer })
   ],
   providers: [AuthService],
-  bootstrap: [],
+  bootstrap: [AppComponent],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],

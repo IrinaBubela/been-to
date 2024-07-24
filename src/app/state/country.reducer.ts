@@ -1,15 +1,26 @@
 import { createReducer, on } from '@ngrx/store';
-import * as CountryActions from './country.actions';
-import { CountryState } from './country.model';
+import * as MapActions from './country.actions';
+import { Country } from './country.model';
 
-const initialState: CountryState = {
-  selectedCountry: null
-};
+const initialState: Country[] = [
+    { id: '1', visited: false },
+    { id: '2', visited: false },
+];
 
-export const countryReducer = createReducer(
-  initialState,
-  on(CountryActions.selectCountry, (state, { name, login, password }) => ({
-    ...state,
-    selectedCountry: { name, login, password }
-  }))
+const mapReducer = createReducer(
+    initialState,
+    on(MapActions.markCountryAsVisited, (state, { countryId }) => {
+        return state.map(country =>
+            country.id === countryId ? { ...country, visited: true } : country
+        );
+    }),
+    on(MapActions.markCountryAsNotVisited, (state, { countryId }) => {
+        return state.map(country =>
+            country.id === countryId ? { ...country, visited: false } : country
+        );
+    })
 );
+
+export function reducer(state: any, action: any) {
+    return mapReducer(state, action);
+}

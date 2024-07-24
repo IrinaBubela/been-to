@@ -1,6 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 
-export const selectCountry = createAction(
-  '[Country] Select Country',
-  props<{ name: string; login: string; password: string }>()
+export const markCountryAsVisited = createAction(
+  '[Map] Mark Country As Visited',
+  props<{ countryId: string }>()
+);
+
+export const markCountryAsNotVisited = createAction(
+  '[Map] Mark Country As Not Visited',
+  props<{ countryId: string }>()
 );

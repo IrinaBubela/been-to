@@ -1,7 +1,12 @@
+export interface Country {
+  id: string;
+  visited: boolean;
+}
+
 export interface CountryState {
-    selectedCountry: {
-      name: string;
-      login: string;
-      password: string;
-    } | null;
-  }
+  countries: Country[];
+}
+
+export interface AppState {
+  countryState: CountryState;
+}

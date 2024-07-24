@@ -10,13 +10,8 @@
   <div class="banner">
     <h1>Welcome to My BeenTo</h1>
   </div>
-
-  <div *ngIf="(selectedCountry$ | async) as selectedCountry">
-    <h2>Selected Country: {{ selectedCountry.name }}</h2>
-    <p>Login: {{ selectedCountry.login }}</p>
-    <p>Password: {{ selectedCountry.password }}</p>
-  </div>
   <app-map></app-map>
+  <!-- <app-country-selector></app-country-selector> -->
 
   <!-- <div class="auth-section">
       <router-outlet></router-outlet>
