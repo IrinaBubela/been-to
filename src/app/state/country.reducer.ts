@@ -1,15 +1,14 @@
+// country.reducer.ts
 import { createReducer, on } from '@ngrx/store';
-import * as CountryActions from './country.actions';
-import { CountryState } from './country.model';
+import { initialCountriesState } from './countries.state';
+import { addCountry } from './countries.actions';
 
-const initialState: CountryState = {
-  selectedCountry: null
-};
-
-export const countryReducer = createReducer(
-  initialState,
-  on(CountryActions.selectCountry, (state, { name, login, password }) => ({
-    ...state,
-    selectedCountry: { name, login, password }
-  }))
+export const countriesReducer = createReducer(
+  initialCountriesState,
+  on(addCountry, (state, { country }) => {
+    console.log('State before update:', state);
+    const updatedCountries = [...state.countries, country];
+    console.log('State after update:', { ...state, countries: updatedCountries });
+    return { ...state, countries: updatedCountries };
+  })
 );

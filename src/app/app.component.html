@@ -6,19 +6,20 @@
   </nav>
 </header>
 
+<div>
+  <h1>Countries</h1>
+  <ul>
+    <li *ngFor="let country of countries$ | async">{{ country }}</li>
+  </ul>
+  <button (click)="addCountry('USA')">Add USA</button>
+</div>
+
 <main>
   <div class="banner">
     <h1>Welcome to My BeenTo</h1>
   </div>
-
-  <div *ngIf="(selectedCountry$ | async) as selectedCountry">
-    <h2>Selected Country: {{ selectedCountry.name }}</h2>
-    <p>Login: {{ selectedCountry.login }}</p>
-    <p>Password: {{ selectedCountry.password }}</p>
-  </div>
+  
+  <app-country-list></app-country-list>
   <app-map></app-map>
-
-  <!-- <div class="auth-section">
-      <router-outlet></router-outlet>
-    </div> -->
 </main>
+
