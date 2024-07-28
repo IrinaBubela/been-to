@@ -1,26 +1,14 @@
+// country.reducer.ts
 import { createReducer, on } from '@ngrx/store';
-import * as MapActions from './country.actions';
-import { Country } from './country.model';
+import { initialCountriesState } from './countries.state';
+import { addCountry } from './countries.actions';
 
-const initialState: Country[] = [
-    { id: '1', visited: false },
-    { id: '2', visited: false },
-];
-
-const mapReducer = createReducer(
-    initialState,
-    on(MapActions.markCountryAsVisited, (state, { countryId }) => {
-        return state.map(country =>
-            country.id === countryId ? { ...country, visited: true } : country
-        );
-    }),
-    on(MapActions.markCountryAsNotVisited, (state, { countryId }) => {
-        return state.map(country =>
-            country.id === countryId ? { ...country, visited: false } : country
-        );
-    })
+export const countriesReducer = createReducer(
+  initialCountriesState,
+  on(addCountry, (state, { country }) => {
+    console.log('State before update:', state);
+    const updatedCountries = [...state.countries, country];
+    console.log('State after update:', { ...state, countries: updatedCountries });
+    return { ...state, countries: updatedCountries };
+  })
 );
-
-export function reducer(state: any, action: any) {
-    return mapReducer(state, action);
-}
