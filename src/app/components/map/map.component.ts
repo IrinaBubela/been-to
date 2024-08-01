@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
-// import { addCountry } from '../../state/countries.actions';
-import { Observable } from 'rxjs';
+import * as AuthActions from '../../auth/auth.actions';
 
 @Component({
   selector: 'app-map',
@@ -12,19 +11,21 @@ import { Observable } from 'rxjs';
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements OnInit {
-  countries$: Observable<string[]>;
-  
+  private highlightedCountries: Set<string> = new Set();
+
   constructor(private store: Store<{ countries: string[] }>) {
-    this.countries$ = store.select('countries');
   }
-  
+
   ngOnInit() {
     this.initMap();
   }
 
   public initMap() {
     const map = this.initializeMap();
+    this.initializeMapFunctionality(map);
+  }
 
+  public initializeMapFunctionality(map: any): void {
     map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
 
     map.data.setStyle({
@@ -34,17 +35,40 @@ export class MapComponent implements OnInit {
 
     map.data.addListener('click', (event: any) => {
       const countryName = event.feature.getProperty('name');
-      map.data.overrideStyle(event.feature, { fillColor: 'red' });
-      console.log('Visited: ' + countryName);
-      const country = countryName;
-      // this.store.dispatch(addCountry());
 
+      if (this.highlightedCountries.has(countryName)) {
+        // If the clicked country was already selected, remove the highlight
+        this.removeHighlight(map, countryName);
+        this.highlightedCountries.delete(countryName);
+        this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
+      } else {
+        // Highlight the new country
+        this.highlightCountry(map, countryName, 'red');
+        this.highlightedCountries.add(countryName);
+        this.store.dispatch(AuthActions.addCountry({ country: countryName }));
+      }
+
+      console.log('Highlighted countries:', Array.from(this.highlightedCountries));
+    });
+  }
+
+  public highlightCountry(map: any, countryName: string, color: string) {
+    map.data.forEach((feature: any) => {
+      if (feature.getProperty('name') === countryName) {
+        map.data.overrideStyle(feature, { fillColor: color });
+      }
+    });
+  }
+
+  public removeHighlight(map: any, countryName: string) {
+    map.data.forEach((feature: any) => {
+      if (feature.getProperty('name') === countryName) {
+        map.data.overrideStyle(feature, { fillColor: 'none' }); 
+      }
     });
   }
 
   public initializeMap(): any {
-    // Your map initialization logic here
-    // For example, initialize Google Maps
     return new google.maps.Map(document.getElementById('map'), {
       center: { lat: 20, lng: 0 },
       zoom: 2

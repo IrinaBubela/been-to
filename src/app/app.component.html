@@ -1,25 +1,20 @@
-<app-navigation-bar></app-navigation-bar>
+<div class="app">
+  <header>
+    <app-navigation-bar></app-navigation-bar>
+  </header>
 
-<header>
-  <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" routerLink="/">Total: 20 countries</a>
-  </nav>
-</header>
+  <main>
+    <div class="banner">
+      <h1>Welcome to My BeenTo</h1>
+      <p>Total: {{totalCountOfCountries}} countries</p>
+    </div>
 
-<div>
-  <h1>Countries</h1>
-  <ul>
-    <li *ngFor="let country of countries$ | async">{{ country }}</li>
-  </ul>
-  <button (click)="addCountry('USA')">Add USA</button>
+
+    <router-outlet></router-outlet>
+  </main>
 </div>
 
-<main>
-  <div class="banner">
-    <h1>Welcome to My BeenTo</h1>
-  </div>
-  
-  <app-country-list></app-country-list>
-  <app-map></app-map>
-</main>
 
+
+<!-- <app-country-list></app-country-list>
+<app-map></app-map> -->

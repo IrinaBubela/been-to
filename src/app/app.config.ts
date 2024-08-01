@@ -5,8 +5,9 @@ import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
+import { provideEffects } from '@ngrx/effects';
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(), provideStore()]
+  providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(), provideStore(), provideEffects()]
 };

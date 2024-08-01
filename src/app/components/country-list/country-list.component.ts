@@ -1,27 +1,32 @@
-// app/components/country-list/country-list.component.ts
-import { Component, OnInit } from '@angular/core';
-// import { select, Store } from '@ngrx/store';
-// import { Observable } from 'rxjs';
-// import { Country } from '../../state/countries.state';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs';
+import { MapService } from '../../services/map/map.service';
 
 @Component({
   selector: 'app-country-list',
   templateUrl: './country-list.component.html',
+  styleUrls: ['./country-list.component.scss'],
   standalone: true,
-  imports: [CommonModule]
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule],
 })
 export class CountryListComponent implements OnInit {
-  // public countries$: Observable<Country[]> = new Observable<Country[]>;
+  public countries$: Observable<string[]>;
+  public countries: string[];
 
-  // constructor(private store: Store<{ countries: Country[] }>) {
-  //   this.countries$ = this.store.pipe(select('countries'));
-  //   this.countries$.subscribe(data => console.log('data', data));
-  // }
+  constructor(private mapService: MapService,
+    private cdRef: ChangeDetectorRef
+  ) {
+  }
+
 
   ngOnInit() {
-    // this.countries$.subscribe(countries => {
-    //   console.log('Countries:', countries);
-    // });
+    this.mapService.getCountries().subscribe(
+      data => {
+        this.countries = data;
+        this.cdRef.detectChanges();
+      }
+    )
   }
 }
