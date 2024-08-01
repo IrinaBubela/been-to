@@ -12,8 +12,6 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { StoreModule } from '@ngrx/store';
 import { countryReducer } from './auth/auth.reducer';
 import { CountryEffects } from './auth/auth.effects';
-import { AppRoutingModule } from './app-routing.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -34,7 +32,6 @@ import { RouterModule } from '@angular/router';
     HttpClientModule,
     StoreModule.forRoot({ countries: countryReducer }),
     EffectsModule.forRoot([CountryEffects]),
-    AppRoutingModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent],

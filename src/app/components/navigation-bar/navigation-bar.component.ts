@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-bar',
   templateUrl: './navigation-bar.component.html',
   styleUrl: './navigation-bar.component.scss',
   standalone: true,
-  imports: [RouterOutlet, RouterModule]
+  imports: [RouterOutlet, RouterLink, RouterModule ,RouterLinkActive]
 })
 export class NavigationBarComponent {
 

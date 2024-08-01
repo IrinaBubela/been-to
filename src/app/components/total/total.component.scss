@@ -1,0 +1,40 @@
+.total {
+    margin-top: 30px;
+
+    h1,
+    p {
+        text-align: center;
+    }
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('https://source.unsplash.com/1600x900/?travel') no-repeat center center/cover;
+}
+
+.welcome-box {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-box h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.welcome-box p {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-box p:last-child {
+    margin-bottom: 0;
+}

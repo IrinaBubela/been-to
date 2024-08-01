@@ -1,11 +1,10 @@
-.app {
-    width: 100%;
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    .banner {
-        margin-top: 30px;
-        h1, p {
-            text-align: center;
-        }
-    }
+body, html {
+    height: 100%;
+    font-family: 'Arial', sans-serif;
 }

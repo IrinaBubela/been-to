@@ -7,10 +7,13 @@ import { HttpClientModule } from '@angular/common/http';
 import { countryReducer } from './app/auth/auth.reducer';
 import { CountryEffects } from './app/auth/auth.effects';
 import { CommonModule } from '@angular/common';
+import { provideRouter } from '@angular/router';
+import { routes } from './app/app.routes';
 
 bootstrapApplication(AppComponent, {
   providers: [
     CommonModule,
+    provideRouter(routes),
     importProvidersFrom(
       HttpClientModule,
       //NgRx modules
