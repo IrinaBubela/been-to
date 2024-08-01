@@ -4,8 +4,10 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine"
-    ]
+      "jasmine",
+      "google.maps",
+      "googlemaps"
+    ],
   },
   "include": [
     "src/**/*.spec.ts",

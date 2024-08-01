@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
 import * as AuthActions from '../../auth/auth.actions';
+import { mapOptions } from '../../map-options';
+import { Observable } from 'rxjs';
+import { MapService } from '../../services/map/map.service';
 
 @Component({
   selector: 'app-map',
@@ -12,28 +15,45 @@ import * as AuthActions from '../../auth/auth.actions';
 })
 export class MapComponent implements OnInit {
   private highlightedCountries: Set<string> = new Set();
+  public totalCountOfCountries: number;
+  public countries$: Observable<string[]> = new Observable<string[]>;
 
-  constructor(private store: Store<{ countries: string[] }>) {
+  constructor(
+    private readonly store: Store<{ countries: string[] }>,
+    private readonly mapService: MapService,
+    private readonly cdRef: ChangeDetectorRef,
+  ) {
   }
+
 
   ngOnInit() {
     this.initMap();
+    this.getSelectedState();
   }
 
-  public initMap() {
-    const map = this.initializeMap();
-    this.initializeMapFunctionality(map);
+  public getSelectedState(): void {
+    this.mapService.getTotalCountriesSelected()
+      .subscribe(totalNum => {
+        this.totalCountOfCountries = totalNum;
+        console.log(this.totalCountOfCountries, 'this.totalCountOfCountries');
+
+        this.cdRef.detectChanges();
+      });
   }
 
-  public initializeMapFunctionality(map: any): void {
+  public initMap(): void {
+    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
     map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
 
-    map.data.setStyle({
-      fillColor: '#888888',
-      strokeWeight: 1
-    });
+    this.addStyleForSelectingCountries(map);
+    this.addFunctionalityToMap(map);
+  }
 
+  public addFunctionalityToMap(map: any): void {
     map.data.addListener('click', (event: any) => {
+      // this.map.data.revertStyle();
+      // this.map.data.overrideStyle(event.feature, { fillColor: '#FF0000' });
+
       const countryName = event.feature.getProperty('name');
 
       if (this.highlightedCountries.has(countryName)) {
@@ -43,13 +63,21 @@ export class MapComponent implements OnInit {
         this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
       } else {
         // Highlight the new country
-        this.highlightCountry(map, countryName, 'red');
+        this.highlightCountry(map, countryName, '#f60c04');
         this.highlightedCountries.add(countryName);
         this.store.dispatch(AuthActions.addCountry({ country: countryName }));
       }
-
-      console.log('Highlighted countries:', Array.from(this.highlightedCountries));
     });
+  }
+
+  public addStyleForSelectingCountries(map: any): void {
+    map.data.setStyle(() => {
+      return {
+        fillColor: '#eeeeee',
+        strokeWeight: 1,
+      };
+    });
+
   }
 
   public highlightCountry(map: any, countryName: string, color: string) {
@@ -63,15 +91,8 @@ export class MapComponent implements OnInit {
   public removeHighlight(map: any, countryName: string) {
     map.data.forEach((feature: any) => {
       if (feature.getProperty('name') === countryName) {
-        map.data.overrideStyle(feature, { fillColor: 'none' }); 
+        map.data.overrideStyle(feature, { fillColor: 'none' });
       }
-    });
-  }
-
-  public initializeMap(): any {
-    return new google.maps.Map(document.getElementById('map'), {
-      center: { lat: 20, lng: 0 },
-      zoom: 2
     });
   }
 }

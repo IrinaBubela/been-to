@@ -24,6 +24,7 @@
       "dom"
     ],
     "strictPropertyInitialization": false,
+    "types": ["google.maps",  "googlemaps"]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
