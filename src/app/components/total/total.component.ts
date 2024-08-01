@@ -12,7 +12,7 @@ import { MapService } from '../../services/map/map.service';
 export class TotalComponent implements OnInit {
   public totalCountOfCountries: number;
   public countries$: Observable<string[]> = new Observable<string[]>;
-
+  public maxCountries: number = 200;
   constructor(
     private readonly mapService: MapService,
     private readonly cdRef: ChangeDetectorRef,
@@ -28,5 +28,15 @@ export class TotalComponent implements OnInit {
         
         this.cdRef.detectChanges();
       });
+
+      
+  }
+
+  get visitedPercentage(): number {
+    return (this.totalCountOfCountries / this.maxCountries) * 100;
+  }
+
+  get planningPercentage(): number {
+    return (this.totalCountOfCountries / this.maxCountries) * 100;
   }
 }

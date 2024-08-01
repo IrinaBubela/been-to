@@ -1,10 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "DM Sans", sans-serif;
 }
 
 body, html {
     height: 100%;
-    font-family: 'Arial', sans-serif;
+    font-family: "Playfair Display", serif;
+}
+
+.error {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
 }

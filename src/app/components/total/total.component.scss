@@ -7,18 +7,19 @@
     }
 }
 
-.container {
+.total-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: url('https://source.unsplash.com/1600x900/?travel') no-repeat center center/cover;
+    height: 85vh;
+    overflow-x: hidden;
+    background: url(../../../assets/imgs/screen.bmp) no-repeat center center/cover;
 }
 
 .welcome-box {
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 2rem 3rem;
-    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.884);
+    padding: 6rem 8rem;
+    border-radius: 2px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
@@ -37,4 +38,64 @@
 
 .welcome-box p:last-child {
     margin-bottom: 0;
+}
+
+//////////////////////////
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f09f;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: #ffffffe8;
+    padding: 25px;
+    border-radius: 7px;
+    box-shadow: 0 4px 8px rgba(247, 225, 152, 0.377);
+    width: 400px;
+    text-align: center;
+}
+
+.counter {
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.number {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 20px;
+    width: 100%;
+}
+
+.progress {
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s ease;
+}
+
+.visited {
+    background: #4caf50;
+    color: 4caf50;
+}
+
+.planning {
+    background: #ff9800;
 }

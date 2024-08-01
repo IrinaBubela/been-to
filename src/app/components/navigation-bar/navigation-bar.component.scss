@@ -1,0 +1,63 @@
+.navbar .navbar-brand {
+    margin-bottom: 10px;
+    font-family: "Playfair Display", serif;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.833);
+
+    span {
+        font-size: 30px;
+    }
+}
+
+.map-icon svg {
+    width: 20px;
+}
+
+.navbar-items {
+    display: flex;
+}
+
+
+.visited {
+   margin-right: 10px;
+}
+
+.planning {
+    margin-right: 10px;
+}
+
+.nav-button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.nav-button:hover {
+    background-color: #777;
+}
+
+.navbar-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .nav-item .btn-link, 
+    .nav-item .nav-link {
+        color: #EAC452;
+    }
+
+    .login  {
+        button {
+            background-color: #EAC452;
+            border: #EAC452;
+        }
+
+        a{
+            text-decoration: none;
+            color: white;
+        }
+    }
+}

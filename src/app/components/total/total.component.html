@@ -1,7 +1,18 @@
-<div class="container">
-    <div class="welcome-box total">
-        <h1>Welcome to My BeenTo</h1>
-        <p>You have already visited: {{totalCountOfCountries}} countries</p>
-        <p>You are going to visit: {{totalCountOfCountries}} countries</p>
+<div class="container-fluid total-container">
+    <div class="container">
+        <div class="counter">
+            <h2>Countries Visited:</h2>
+            <div class="number">{{ totalCountOfCountries }}</div>
+            <div class="progress-bar">
+                <div class="progress visited" [style.width.%]="visitedPercentage"></div>
+            </div>
+        </div>
+        <div class="counter">
+            <h2>Countries Planning to Visit:</h2>
+            <div class="number">{{ 0 }}</div>
+            <div class="progress-bar">
+                <div class="progress planning" [style.width.%]="planningPercentage"></div>
+            </div>
+        </div>
     </div>
 </div>

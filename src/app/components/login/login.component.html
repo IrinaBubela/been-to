@@ -1,1 +1,31 @@
-<p>login works!</p>
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center">
+      <div class="col-md-4 col-sm-12">
+        <div class="card mt-5">
+          <div class="card-body">
+            <h3 class="card-title text-center">Login</h3>
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" class="form-control" formControlName="email" required>
+                <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="text-danger">
+                  <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required</div>
+                  <div *ngIf="loginForm.get('email')?.errors?.['email']">Invalid email format</div>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <label for="password">Password:</label>
+                <input type="password" id="password" class="form-control" formControlName="password" required>
+                <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="text-danger">
+                  <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required</div>
+                  <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters long</div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block mt-4" [disabled]="loginForm.invalid">Login</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

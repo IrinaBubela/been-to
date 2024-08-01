@@ -12,6 +12,7 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { StoreModule } from '@ngrx/store';
 import { countryReducer } from './auth/auth.reducer';
 import { CountryEffects } from './auth/auth.effects';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,8 +29,10 @@ import { CountryEffects } from './auth/auth.effects';
     SignupComponent,
     MapComponent,
     CountryListComponent,
+    ReactiveFormsModule,
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     StoreModule.forRoot({ countries: countryReducer }),
     EffectsModule.forRoot([CountryEffects]),
   ],
