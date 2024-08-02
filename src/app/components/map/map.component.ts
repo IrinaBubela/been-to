@@ -35,8 +35,6 @@ export class MapComponent implements OnInit {
     this.mapService.getTotalCountriesSelected()
       .subscribe(totalNum => {
         this.totalCountOfCountries = totalNum;
-        console.log(this.totalCountOfCountries, 'this.totalCountOfCountries');
-
         this.cdRef.detectChanges();
       });
   }
@@ -55,7 +53,9 @@ export class MapComponent implements OnInit {
       // this.map.data.overrideStyle(event.feature, { fillColor: '#FF0000' });
 
       const countryName = event.feature.getProperty('name');
-
+      if (countryName === 'Antarctica') {
+        return;
+      }
       if (this.highlightedCountries.has(countryName)) {
         // If the clicked country was already selected, remove the highlight
         this.removeHighlight(map, countryName);
@@ -63,7 +63,9 @@ export class MapComponent implements OnInit {
         this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
       } else {
         // Highlight the new country
-        this.highlightCountry(map, countryName, '#f60c04');
+        console.log('countryName', countryName);
+
+        this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
         this.store.dispatch(AuthActions.addCountry({ country: countryName }));
       }
@@ -74,6 +76,7 @@ export class MapComponent implements OnInit {
     map.data.setStyle(() => {
       return {
         fillColor: '#eeeeee',
+        strokeColor: '#3f4242',
         strokeWeight: 1,
       };
     });
