@@ -1,50 +1,55 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { jwtDecode } from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedInSubject = new BehaviorSubject<boolean>(false);
+  private baseUrl = 'http://localhost:5000/api/auth';
+  private currentUserSubject: BehaviorSubject<any>;
+  public currentUser: Observable<any>;
 
-  constructor(private http: HttpClient) {}
-
-  public login(username: string, password: string): Observable<boolean> {
-    return this.http.post<any>('/google.com', { username, password })
-      .pipe(
-        map(response => {
-          if (response && response.token) {
-            localStorage.setItem('currentUser', JSON.stringify(response.token));
-            this.loggedInSubject.next(true);
-            return true;
-          } else {
-            return false;
-          }
-        })
-      );
+  constructor(private http: HttpClient, private router: Router) {
+    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(String(localStorage.getItem('currentUser'))));
+    this.currentUser = this.currentUserSubject.asObservable();
+    
   }
 
-  public logout(): void {
+  public get currentUserValue(): any {
+    return this.currentUserSubject.value;
+  }
+
+  public login(email: string, password: string) {
+    return this.http.post<any>(`${this.baseUrl}/login`, { email, password })
+      .pipe(map(user => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user));
+          this.currentUserSubject.next(user);
+        }
+        return user;
+      }));
+  }
+
+  public signup(email: string, password: string) {
+    return this.http.post<any>(`${this.baseUrl}/signup`, { email, password });
+  }
+
+  public logout() {
     localStorage.removeItem('currentUser');
-    this.loggedInSubject.next(false);
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
   }
 
-  public isLoggedIn(): Observable<boolean> {
-    return this.loggedInSubject.asObservable();
-  }
-
-  public register(name: string, password: string): Observable<string[]> {
-    return of([name,password]);
-  }
-
-  public addCountry(country: string): Observable<string[]> {
-    console.log(country, 'country');
-    return of(['123', '1231']);
-  }
-
-  public getVisitedCountries(): Observable<string[]> {
-    return of(['123', '1231']);
+  public getUserIdFromToken(): string | null {
+    const token = this.currentUserValue?.token;
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      return decoded.userId;
+    }
+    return null;
   }
 }

@@ -5,6 +5,8 @@ import * as AuthActions from '../../auth/auth.actions';
 import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
 import { MapService } from '../../services/map/map.service';
+import { CountriesService } from '../../services/auth/countries.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-map',
@@ -17,18 +19,23 @@ export class MapComponent implements OnInit {
   private highlightedCountries: Set<string> = new Set();
   public totalCountOfCountries: number;
   public countries$: Observable<string[]> = new Observable<string[]>;
+  public selectedCountries: string[];
 
   constructor(
     private readonly store: Store<{ countries: string[] }>,
     private readonly mapService: MapService,
+    private readonly countriesService: CountriesService,
     private readonly cdRef: ChangeDetectorRef,
   ) {
   }
 
-
   ngOnInit() {
     this.initMap();
     this.getSelectedState();
+
+    this.countriesService.getCountries().subscribe(data => {
+      this.selectedCountries = data;
+    });
   }
 
   public getSelectedState(): void {
@@ -56,11 +63,19 @@ export class MapComponent implements OnInit {
       if (countryName === 'Antarctica') {
         return;
       }
+      console.log('event', event.feature.Gg);
+      const countryCode = event.feature.Gg;
       if (this.highlightedCountries.has(countryName)) {
         // If the clicked country was already selected, remove the highlight
         this.removeHighlight(map, countryName);
         this.highlightedCountries.delete(countryName);
         this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
+
+        this.countriesService.removeCountry(countryCode)
+          .subscribe(
+            (data) => console.log(data, 'data'),
+            (err) => console.log(err, 'err'),
+          );
       } else {
         // Highlight the new country
         console.log('countryName', countryName);
@@ -68,6 +83,8 @@ export class MapComponent implements OnInit {
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
         this.store.dispatch(AuthActions.addCountry({ country: countryName }));
+        this.countriesService.addCountry(countryCode)
+          .subscribe(data => console.log(data, 'data'));
       }
     });
   }
