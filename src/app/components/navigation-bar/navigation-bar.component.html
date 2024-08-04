@@ -46,15 +46,20 @@
           <div class="country-count planning"><span class="mr-4">Planning:</span> 0 </div>
         </div>
         <ul class="nav navbar-nav navbar-login">
-          <li class="nav-item signup">
+          <li *ngIf="!currentUser" class="nav-item signup">
             <button type="button" class="btn btn-link">
               <a [routerLink]="['/signup']" class="nav-link"><span class="fas fa-user"></span> Sign Up</a>
             </button>
-           
+
           </li>
-          <li class="nav-item login">
+          <li *ngIf="!currentUser" class="nav-item login">
             <button type="button" class="btn btn-danger">
               <a [routerLink]="['/login']">Login</a>
+            </button>
+          </li>
+          <li class="nav-item login">
+            <button *ngIf="currentUser" type="button" (click)="logout()" class="btn btn-danger">
+              Logout
             </button>
           </li>
         </ul>

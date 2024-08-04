@@ -32,11 +32,7 @@ export class AppComponent implements OnInit {
         this.totalCountOfCountries = totalNum
         this.cdRef.detectChanges();
       });
-    this.authService.isLoggedIn()
-      .subscribe((res) => { this.isLoggedIn = res });
   }
-
-
 
   public logout() {
     this.authService.logout();
