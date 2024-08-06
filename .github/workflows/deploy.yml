@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '14' # Specify the Node.js version
 
       - name: Install dependencies
         run: npm install
@@ -27,10 +27,7 @@ jobs:
           echo "NODE_ENV=production" >> $GITHUB_ENV
 
       - name: Run the set-env script
-        run: node ./set-env.ts
+        run: node set-env.ts
 
       - name: Build the project
-        run: npm run build -- --configuration production --base-href "https://username.github.io/repository-name/"
-
-      - name: Deploy to GitHub Pages
-        run: npx angular-cli-ghpages --dir=dist/your-angular-app
+        run: npm run build --prod
