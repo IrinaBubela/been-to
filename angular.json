@@ -36,7 +36,7 @@
             ],
             "scripts": [
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
-               "set-env.ts"
+              "set-env.ts"
             ]
           },
           "configurations": {
