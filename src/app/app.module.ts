@@ -13,14 +13,10 @@ import { StoreModule } from '@ngrx/store';
 import { countryReducer } from './auth/auth.reducer';
 import { CountryEffects } from './auth/auth.effects';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxApexchartsModule } from 'ngx-apexcharts';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    LoginComponent,
-    SignupComponent,
-    MapComponent,
-    CountryListComponent,
   ],
   imports: [
     CommonModule,
@@ -35,9 +31,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FormsModule,
     StoreModule.forRoot({ countries: countryReducer }),
     EffectsModule.forRoot([CountryEffects]),
+    NgxApexchartsModule,
   ],
   providers: [AuthService],
-  bootstrap: [AppComponent],
+  bootstrap: [],
   schemas: [
     CUSTOM_ELEMENTS_SCHEMA
   ],
