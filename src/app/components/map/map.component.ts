@@ -6,7 +6,8 @@ import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
 import { MapService } from '../../services/map/map.service';
 import { CountriesService } from '../../services/auth/countries.service';
-import { AuthService } from '../../services/auth/auth.service';
+import { environment } from '../../../environments/environment'; // Import the environment config
+/* global google */
 
 @Component({
   selector: 'app-map',
@@ -18,7 +19,7 @@ import { AuthService } from '../../services/auth/auth.service';
 export class MapComponent implements OnInit {
   private highlightedCountries: Set<string> = new Set();
   public totalCountOfCountries: number;
-  public countries$: Observable<string[]> = new Observable<string[]>;
+  public countries$: Observable<string[]> = new Observable<string[]>();
   public selectedCountries: string[];
 
   constructor(
@@ -26,15 +27,31 @@ export class MapComponent implements OnInit {
     private readonly mapService: MapService,
     private readonly countriesService: CountriesService,
     private readonly cdRef: ChangeDetectorRef,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    this.initMap();
-    this.getSelectedState();
+    this.loadGoogleMapsScript().then(() => {
+      this.initMap();
+      this.getSelectedState();
+    });
 
     this.countriesService.getCountries().subscribe(data => {
       this.selectedCountries = data;
+    });
+  }
+
+  // Function to load Google Maps script dynamically
+  private loadGoogleMapsScript(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if ((window as any).google && (window as any).google.maps) {
+        resolve(); // If the script is already loaded
+      } else {
+        const script = document.createElement('script');
+        // Use the API key from environment variables
+        script.onload = () => resolve();
+        script.onerror = (error) => reject(error);
+        document.body.appendChild(script);
+      }
     });
   }
 
@@ -56,17 +73,13 @@ export class MapComponent implements OnInit {
 
   public addFunctionalityToMap(map: any): void {
     map.data.addListener('click', (event: any) => {
-      // this.map.data.revertStyle();
-      // this.map.data.overrideStyle(event.feature, { fillColor: '#FF0000' });
-
       const countryName = event.feature.getProperty('name');
       if (countryName === 'Antarctica') {
         return;
       }
-      console.log('event', event.feature.Gg);
+
       const countryCode = event.feature.Gg;
       if (this.highlightedCountries.has(countryName)) {
-        // If the clicked country was already selected, remove the highlight
         this.removeHighlight(map, countryName);
         this.highlightedCountries.delete(countryName);
         this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
@@ -77,12 +90,10 @@ export class MapComponent implements OnInit {
             (err) => console.log(err, 'err'),
           );
       } else {
-        // Highlight the new country
-        console.log('countryName', countryName);
-
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
         this.store.dispatch(AuthActions.addCountry({ country: countryName }));
+
         this.countriesService.addCountry(countryCode)
           .subscribe(data => console.log(data, 'data'));
       }
@@ -97,7 +108,6 @@ export class MapComponent implements OnInit {
         strokeWeight: 1,
       };
     });
-
   }
 
   public highlightCountry(map: any, countryName: string, color: string) {

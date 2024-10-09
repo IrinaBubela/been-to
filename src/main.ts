@@ -16,7 +16,6 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     importProvidersFrom(
       HttpClientModule,
-      //NgRx modules
       StoreModule.forRoot({ countries: countryReducer }),
       EffectsModule.forRoot([CountryEffects])
     ),

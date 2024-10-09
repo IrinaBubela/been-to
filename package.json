@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:env": "node ./set-env.ts && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -34,6 +35,7 @@
     "chart.js": "^4.4.4",
     "cors": "^2.8.5",
     "d3": "^7.9.0",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "heroku": "^9.1.0",
     "jwt-decode": "^4.0.0",
