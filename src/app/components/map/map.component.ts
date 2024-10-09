@@ -1,13 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
-import * as AuthActions from '../../auth/auth.actions';
+import * as AuthActions from '../../country/country.actions';
 import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
 import { MapService } from '../../services/map/map.service';
 import { CountriesService } from '../../services/auth/countries.service';
-import { environment } from '../../../environments/environment'; // Import the environment config
-/* global google */
 
 @Component({
   selector: 'app-map',
@@ -92,10 +90,12 @@ export class MapComponent implements OnInit {
       } else {
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
+        console.log({ country: countryName }, 'hereee');
+        
         this.store.dispatch(AuthActions.addCountry({ country: countryName }));
 
-        this.countriesService.addCountry(countryCode)
-          .subscribe(data => console.log(data, 'data'));
+        // this.countriesService.addCountry(countryCode)
+        //   .subscribe(data => console.log(data, 'data'));
       }
     });
   }

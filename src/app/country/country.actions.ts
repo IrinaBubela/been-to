@@ -1,4 +1,3 @@
-// auth.actions.ts
 import { createAction, props } from '@ngrx/store';
 
 export const login = createAction('[Auth] Login', props<{ username: string; password: string }>());
@@ -26,3 +25,14 @@ export const removeCountry = createAction(
   '[Country] Remove Country',
   props<{ country: string }>()
 );
+
+export const addCountrySuccess = createAction(
+  '[Country] Add Country Success',
+  props<{ country: string }>() // You can modify this to include more data if needed
+);
+
+export const addCountryFailure = createAction(
+  '[Country] Add Country Failure',
+  props<{ error: any }>()
+);
+

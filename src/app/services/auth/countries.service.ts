@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 
 @Injectable({
     providedIn: 'root'
@@ -13,8 +12,8 @@ export class CountriesService {
     public currentUser: Observable<any>;
 
     constructor(
-        private http: HttpClient,
-        private authService: AuthService) {
+        private http: HttpClient
+    ) {
         this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(String(localStorage.getItem('currentUser'))));
         this.currentUser = this.currentUserSubject.asObservable();
     }
