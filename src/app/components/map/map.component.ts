@@ -48,9 +48,6 @@ export class MapComponent implements OnInit {
       } else {
         const script = document.createElement('script');
         // Use the API key from environment variables
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;
-        script.async = true;
-        script.defer = true;
         script.onload = () => resolve();
         script.onerror = (error) => reject(error);
         document.body.appendChild(script);
