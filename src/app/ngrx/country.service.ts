@@ -20,11 +20,16 @@ export class AuthService {
     }
 
     public addCountry(country: string): Observable<any> {
-        console.log('service', country);
-
-        const token = this.currentUserValue?.token; // Get the token from the current user
+        const token = this.currentUserValue?.token;
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
         return this.http.post(`${this.baseUrl}/user/addCountry`, { country }, { headers });
+    }
+
+    public getCountries(): Observable<any> {
+        const token = this.currentUserValue?.token;
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+        return this.http.get(`${this.baseUrl}/user/countries`, { headers });
     }
 }

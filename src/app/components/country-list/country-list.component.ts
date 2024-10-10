@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
-import { MapService } from '../../services/map/map.service';
+import { Store } from '@ngrx/store';
+import * as CountryActions from '../../ngrx/country.actions';
+import { CountryState } from '../../ngrx/country.reducer';
 
 @Component({
   selector: 'app-country-list',
@@ -12,21 +14,15 @@ import { MapService } from '../../services/map/map.service';
   imports: [CommonModule],
 })
 export class CountryListComponent implements OnInit {
-  public countries$: Observable<string[]>;
-  public countries: string[];
+  public countries$: Observable<any[]>;
+  public error$: Observable<string | null>; 
 
-  constructor(private mapService: MapService,
-    private cdRef: ChangeDetectorRef
-  ) {
-  }
+  constructor(private store: Store<{ countryState: CountryState }>) {}
 
 
   ngOnInit() {
-    this.mapService.getCountries().subscribe(
-      data => {
-        this.countries = data;
-        this.cdRef.detectChanges();
-      }
-    )
+    this.store.dispatch(CountryActions.fetchCountries());
+    this.countries$ = this.store.select(state => state.countryState.countries);
+    this.error$ = this.store.select(state => state.countryState.error);
   }
 }
