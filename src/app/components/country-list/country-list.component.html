@@ -1,5 +1,5 @@
 <div>
-  <ul *ngIf="countries">
-    <!-- <li *ngFor="let country of countries">{{ country }}</li> -->
+  <ul *ngIf="(countries$ | async) as countries">
+    <li *ngFor="let country of countries">{{ country }}</li>
   </ul>
 </div>

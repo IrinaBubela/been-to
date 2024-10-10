@@ -10,8 +10,8 @@ import { MapComponent } from './components/map/map.component';
 import { AuthService } from './services/auth/auth.service';
 import { CountryListComponent } from './components/country-list/country-list.component';
 import { StoreModule } from '@ngrx/store';
-import { countryReducer } from './country/country.reducer';
-import { CountryEffects } from './country/country.effects';
+import { countryReducer } from './ngrx/country.reducer';
+import { CountryEffects } from './ngrx/country.effects';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxApexchartsModule } from 'ngx-apexcharts';
 

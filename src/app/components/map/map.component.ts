@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
-import * as AuthActions from '../../country/country.actions';
+import * as AuthActions from '../../ngrx/country.actions';
 import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
 import { MapService } from '../../services/map/map.service';

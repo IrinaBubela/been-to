@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MapService } from '../../services/map/map.service';
+import { CountryState } from '../../ngrx/country.reducer';
+import { Store } from '@ngrx/store';
+import * as CountrySelectors from '../../ngrx/country.selector'
 
 @Component({
   selector: 'app-total',
@@ -11,25 +13,21 @@ import { MapService } from '../../services/map/map.service';
 })
 export class TotalComponent implements OnInit {
   public totalCountOfCountries: number;
-  public countries$: Observable<string[]> = new Observable<string[]>;
+  public countries$: Observable<string[]>;
   public maxCountries: number = 200;
-  constructor(
-    private readonly mapService: MapService,
-    private readonly cdRef: ChangeDetectorRef,
-  ) {
 
-  }
+  constructor(
+    private readonly store: Store<{ countryState: CountryState }>, 
+    private readonly cdRef: ChangeDetectorRef
+  ) {}
 
   public ngOnInit(): void {
-    this.mapService.getTotalCountriesSelected()
-      .subscribe(totalNum => {
-        this.totalCountOfCountries = totalNum;
-        console.log(this.totalCountOfCountries, 'this.totalCountOfCountries');
-        
-        this.cdRef.detectChanges();
-      });
+    this.countries$ = this.store.select(CountrySelectors.selectAllCountries); 
 
-      
+    this.countries$.subscribe(countries => {
+      this.totalCountOfCountries = countries.length;
+      this.cdRef.detectChanges();
+    });
   }
 
   get visitedPercentage(): number {
