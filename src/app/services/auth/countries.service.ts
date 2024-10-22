@@ -35,9 +35,10 @@ export class CountriesService {
     }
 
     public getCountries(): Observable<any> {
+        console.log('getCountries !!');
+        
         const token = this.currentUserValue?.token;
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-        console.log('headers', headers);
 
         return this.http.get(`${this.baseUrl}/user/countries`, { headers });
     }

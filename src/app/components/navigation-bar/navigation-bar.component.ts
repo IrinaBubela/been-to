@@ -4,8 +4,10 @@ import { Observable, Subscription } from 'rxjs';
 import * as CountrySelectors from '../../ngrx/country.selector';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { CountryState } from '../../ngrx/country.reducer';
+
+import * as CountryActions from '../../ngrx/country.actions';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -32,8 +34,8 @@ export class NavigationBarComponent implements OnInit {
     this.authSubscription = this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
     });
-
-    this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
+    // Select the countries directly from the store
+    this.countries$ = this.store.pipe(select(CountrySelectors.selectAllCountries));
 
     this.countries$.subscribe(countries => {
       console.log('countries', countries);

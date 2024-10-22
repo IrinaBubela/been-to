@@ -41,10 +41,6 @@ export class MapComponent implements OnInit {
       this.initMap();
     });
 
-    // this.countriesService.getCountries().subscribe(data => {
-    //   this.selectedCountries = data;
-    // });
-
     this.store.dispatch(CountryActions.fetchCountries());
 
     // Subscribe to countries from the state

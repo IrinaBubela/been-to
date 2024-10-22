@@ -25,6 +25,6 @@ export class CountryListComponent implements OnInit {
     this.countries$ = this.store.select(state => {
       return state.countryState.countries;
     });
-    this.error$ = this.store.select(state => state.countryState.error);
+    // this.error$ = this.store.select(state => state.countryState.error);
   }
 }

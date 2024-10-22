@@ -3,22 +3,24 @@ import * as CountryActions from './country.actions';
 
 export interface CountryState {
   countries: string[];
-  error: string | null;
+  error?: string;
 }
 
 export const initialState: CountryState = {
   countries: [],
-  error: null,
+  error: undefined,
 };
 
 const _countryReducer = createReducer(
   initialState,
 
-  on(CountryActions.fetchCountriesSuccess, (state, { countries }) => ({
-    ...state,
-    countries: Array.isArray(countries) ? [...countries] : [],
-    error: null,
-  })),
+  on(CountryActions.fetchCountriesSuccess, (state, { countries }) => {
+    return {
+      ...state,
+      countries,
+      error: undefined,
+    }
+  }),
 
   on(CountryActions.fetchCountriesFailure, (state, { error }) => ({
     ...state,

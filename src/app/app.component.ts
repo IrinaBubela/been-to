@@ -7,16 +7,17 @@ import { CountryListComponent } from './components/country-list/country-list.com
 import { Observable } from 'rxjs';
 import { RouterLinkActive, RouterOutlet } from '@angular/router';
 import { environment } from '../environments/environment';
-import { Store } from '@ngrx/store';
+import { select, Store } from '@ngrx/store';
 import { CountryState } from './ngrx/country.reducer';
-import { selectAllCountries } from './ngrx/country.selector';
+import * as CountryActions from './ngrx/country.actions';
+import * as CountrySelectors from './ngrx/country.selector'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   standalone: true,
-  imports: [CommonModule, NavigationBarComponent, MapComponent, CountryListComponent, 
+  imports: [CommonModule, NavigationBarComponent, MapComponent, CountryListComponent,
     RouterOutlet, RouterLinkActive]
 })
 export class AppComponent implements OnInit {
@@ -30,14 +31,20 @@ export class AppComponent implements OnInit {
     private readonly cdRef: ChangeDetectorRef,
     private readonly renderer: Renderer2
   ) {
+    console.log('hi');
+
+    this.store.dispatch(CountryActions.fetchCountries());
+
+    // Select the countries from the store
+    this.countries$ = this.store.pipe(select(CountrySelectors.selectAllCountries));
+
+    this.countries$.subscribe(countries => {
+      console.log('countries', countries);
+      
+      this.totalCountOfCountries = countries.length;
+    });
   }
   public ngOnInit(): void {
-    // this.countries$ = this.store.select(selectAllCountries); 
-
-    // this.countries$.subscribe(countries => {
-    //   this.totalCountOfCountries = countries.length;
-    //   this.cdRef.detectChanges();
-    // });
 
     const script = this.renderer.createElement('script');
     script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;

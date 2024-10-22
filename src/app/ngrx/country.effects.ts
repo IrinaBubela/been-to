@@ -26,14 +26,12 @@ export class CountryEffects {
       ofType(CountryActions.fetchCountries),
       mergeMap(() =>
         this.countryService.getCountries().pipe(
-          map(response => {
-            const countries = response.countries;
-            if (!Array.isArray(countries)) {
-              throw new Error('Countries is not an array');
-            }
-            return CountryActions.fetchCountriesSuccess({ countries });
+          map(countries => {
+            console.log('Fetched countries:', countries); // Debug log
+            return CountryActions.fetchCountriesSuccess(countries);
           }),
           catchError(error => {
+            console.error('Error fetching countries:', error);
             return of(CountryActions.fetchCountriesFailure({ error }));
           })
         )
