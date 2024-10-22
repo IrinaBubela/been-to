@@ -29,7 +29,14 @@ export class CountryService {
     public getCountries(): Observable<any> {
         const token = this.currentUserValue?.token;
         const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
+
         return this.http.get(`${this.baseUrl}/user/countries`, { headers });
+    }
+
+    public removeCountry(country: string): Observable<string[]> {
+        const token = this.currentUserValue?.token;
+        const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+        return this.http.post<string[]>(`${this.baseUrl}/user/removeCountry`, { country }, { headers });
     }
 }

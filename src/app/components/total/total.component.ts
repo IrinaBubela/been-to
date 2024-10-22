@@ -22,12 +22,12 @@ export class TotalComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    // this.countries$ = this.store.select(CountrySelectors.selectAllCountries); 
+    this.countries$ = this.store.select(CountrySelectors.selectAllCountries); 
 
-    // this.countries$.subscribe(countries => {
-    //   this.totalCountOfCountries = countries.length;
-    //   this.cdRef.detectChanges();
-    // });
+    this.countries$.subscribe(countries => {
+      this.totalCountOfCountries = countries.length;
+      this.cdRef.detectChanges();
+    });
   }
 
   get visitedPercentage(): number {

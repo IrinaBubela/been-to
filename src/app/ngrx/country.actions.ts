@@ -12,11 +12,6 @@ export const addCountry = createAction(
   props<{ country: string }>()
 );
 
-export const removeCountry = createAction(
-  '[Country] Remove Country',
-  props<{ country: string }>()
-);
-
 export const addCountrySuccess = createAction(
   '[Country] Add Country Success',
   props<{ country: string }>()
@@ -27,3 +22,18 @@ export const addCountryFailure = createAction(
   props<{ error: any }>()
 );
 
+// Action for removing a country
+export const removeCountry = createAction(
+  '[Country] Remove Country',
+  props<{ country: string }>()
+);
+
+export const removeCountrySuccess = createAction(
+  '[Country] Remove Country Success',
+  props<{ countries: string[] }>()
+);
+
+export const removeCountryFailure = createAction(
+  '[Country] Remove Country Failure',
+  props<{ error: any }>()
+);

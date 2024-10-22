@@ -1,4 +1,4 @@
-import { createReducer, on, Action } from '@ngrx/store';
+import { createReducer, on } from '@ngrx/store';
 import * as CountryActions from './country.actions';
 
 export interface CountryState {
@@ -6,53 +6,34 @@ export interface CountryState {
   error?: string;
 }
 
-export const initialState: CountryState = {
+const initialState: CountryState = {
   countries: [],
-  error: undefined,
+  error: undefined
 };
 
-const _countryReducer = createReducer(
+export const countryReducer = createReducer(
   initialState,
-
-  on(CountryActions.fetchCountriesSuccess, (state, { countries }) => {
-    return {
-      ...state,
-      countries,
-      error: undefined,
-    }
-  }),
-
-  on(CountryActions.fetchCountriesFailure, (state, { error }) => ({
+  on(CountryActions.fetchCountriesSuccess, (state, { countries }) => ({
     ...state,
-    error,
+    countries: [...new Set([...state.countries, ...countries])] // Prevent duplicates on fetch
   })),
 
   on(CountryActions.addCountry, (state, { country }) => {
+    // Check if the country is already in the list to avoid duplicates
     if (state.countries.includes(country)) {
       return state;
     }
     return {
       ...state,
-      countries: [...state.countries, country],
+      countries: [...state.countries, country]
     };
   }),
-
   on(CountryActions.removeCountry, (state, { country }) => ({
     ...state,
-    countries: state.countries.filter(c => c !== country),
+    countries: state.countries.filter(c => c !== country)
   })),
-
-  on(CountryActions.addCountrySuccess, (state, { country }) => ({
+  on(CountryActions.fetchCountriesFailure, (state, { error }) => ({
     ...state,
-    countries: [...state.countries, country],
-  })),
-
-  on(CountryActions.addCountryFailure, (state, { error }) => ({
-    ...state,
-    error,
-  })),
+    error
+  }))
 );
-
-export function countryReducer(state: CountryState | undefined, action: Action) {
-  return _countryReducer(state, action);
-}
