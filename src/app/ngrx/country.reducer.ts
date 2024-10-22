@@ -16,7 +16,7 @@ const _countryReducer = createReducer(
 
   on(CountryActions.fetchCountriesSuccess, (state, { countries }) => ({
     ...state,
-    countries: [...countries],
+    countries: Array.isArray(countries) ? [...countries] : [],
     error: null,
   })),
 

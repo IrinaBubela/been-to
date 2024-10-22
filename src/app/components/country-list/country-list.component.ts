@@ -15,14 +15,16 @@ import { CountryState } from '../../ngrx/country.reducer';
 })
 export class CountryListComponent implements OnInit {
   public countries$: Observable<any[]>;
-  public error$: Observable<string | null>; 
+  public error$: Observable<string | null>;
 
-  constructor(private store: Store<{ countryState: CountryState }>) {}
+  constructor(private store: Store<{ countryState: CountryState }>) { }
 
 
   ngOnInit() {
     this.store.dispatch(CountryActions.fetchCountries());
-    this.countries$ = this.store.select(state => state.countryState.countries);
+    this.countries$ = this.store.select(state => {
+      return state.countryState.countries;
+    });
     this.error$ = this.store.select(state => state.countryState.error);
   }
 }

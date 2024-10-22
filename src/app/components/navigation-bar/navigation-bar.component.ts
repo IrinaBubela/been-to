@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive, RouterModule, RouterOutlet } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
-import { MapService } from '../../services/map/map.service';
+import * as CountrySelectors from '../../ngrx/country.selector';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { CountryState } from '../../ngrx/country.reducer';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -20,7 +22,7 @@ export class NavigationBarComponent implements OnInit {
   private authSubscription: Subscription;
 
   constructor(
-    private readonly mapService: MapService,
+    private readonly store: Store<{ countryState: CountryState }>,
     private readonly authService: AuthService,
     private readonly router: Router,
     private readonly cdRef: ChangeDetectorRef,
@@ -28,16 +30,17 @@ export class NavigationBarComponent implements OnInit {
 
   public ngOnInit(): void {
     this.authSubscription = this.authService.currentUser.subscribe(user => {
-      console.log('currentUser', this.currentUser);
       this.currentUser = user;
     });
 
+    this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
 
-    this.mapService.getTotalCountriesSelected()
-      .subscribe(totalNum => {
-        this.totalCountOfCountries = totalNum;
-        this.cdRef.detectChanges();
-      });
+    this.countries$.subscribe(countries => {
+      console.log('countries', countries);
+      
+      this.totalCountOfCountries = countries.length;
+      this.cdRef.detectChanges();
+    });
   }
 
   public ngOnDestroy(): void {
@@ -50,5 +53,4 @@ export class NavigationBarComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
 }

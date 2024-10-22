@@ -20,6 +20,10 @@
 //     }
 
 //     getTotalCountriesSelected(): Observable<number> {
-//         return this.countries$.pipe(map(data => data.length));
+//         this.countries$ = this.store.select(CountrySelectors.selectAllCountries); 
+
+//         this.countries$.subscribe(countries => {
+//           return countries.length;
+//         });
 //     }
 // }

@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthService {
+export class CountryService {
     private baseUrl = 'http://localhost:5000/api';
     private currentUserSubject: BehaviorSubject<any>;
     public currentUser: Observable<any>;

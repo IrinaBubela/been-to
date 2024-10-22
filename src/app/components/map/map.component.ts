@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
-import * as AuthActions from '../../ngrx/country.actions';
+import * as CountryActions from '../../ngrx/country.actions';
 import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
-import { MapService } from '../../services/map/map.service';
+import * as CountrySelectors from '../../ngrx/country.selector';
 import { CountriesService } from '../../services/auth/countries.service';
+import { CountryState } from '../../ngrx/country.reducer';
 
 @Component({
   selector: 'app-map',
@@ -21,21 +22,37 @@ export class MapComponent implements OnInit {
   public selectedCountries: string[];
 
   constructor(
-    private readonly store: Store<{ countries: string[] }>,
-    private readonly mapService: MapService,
+    private readonly store: Store<{ countryState: CountryState }>,
     private readonly countriesService: CountriesService,
     private readonly cdRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
+    // this.countries$ = this.store.select(CountrySelectors.selectAllCountries); 
+
+    // this.countries$.subscribe(countries => {
+    //   console.log('countries', countries);
+
+    //   this.totalCountOfCountries = countries?.length;
+    //   this.cdRef.detectChanges();
+    // });
+
     this.loadGoogleMapsScript().then(() => {
       this.initMap();
-      this.getSelectedState();
     });
 
-    this.countriesService.getCountries().subscribe(data => {
-      this.selectedCountries = data;
+    // this.countriesService.getCountries().subscribe(data => {
+    //   this.selectedCountries = data;
+    // });
+
+    this.store.dispatch(CountryActions.fetchCountries());
+
+    // Subscribe to countries from the state
+    this.countries$ = this.store.select(state => {
+      console.log('state', state); // Log the state to check structure
+      return state.countryState.countries; // Ensure this is the correct path
     });
+
   }
 
   // Function to load Google Maps script dynamically
@@ -53,14 +70,6 @@ export class MapComponent implements OnInit {
     });
   }
 
-  public getSelectedState(): void {
-    this.mapService.getTotalCountriesSelected()
-      .subscribe(totalNum => {
-        this.totalCountOfCountries = totalNum;
-        this.cdRef.detectChanges();
-      });
-  }
-
   public initMap(): void {
     const map = new google.maps.Map(document.getElementById('map'), mapOptions);
     map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
@@ -76,26 +85,15 @@ export class MapComponent implements OnInit {
         return;
       }
 
-      const countryCode = event.feature.Gg;
       if (this.highlightedCountries.has(countryName)) {
         this.removeHighlight(map, countryName);
         this.highlightedCountries.delete(countryName);
-        this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
-
-        this.countriesService.removeCountry(countryCode)
-          .subscribe(
-            (data) => console.log(data, 'data'),
-            (err) => console.log(err, 'err'),
-          );
+        this.store.dispatch(CountryActions.removeCountry({ country: countryName }));
       } else {
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
-        console.log({ country: countryName }, 'hereee');
-        
-        this.store.dispatch(AuthActions.addCountry({ country: countryName }));
 
-        // this.countriesService.addCountry(countryCode)
-        //   .subscribe(data => console.log(data, 'data'));
+        this.store.dispatch(CountryActions.addCountry({ country: countryName }));
       }
     });
   }

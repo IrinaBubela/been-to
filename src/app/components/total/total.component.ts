@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CountryState } from '../../ngrx/country.reducer';
 import { Store } from '@ngrx/store';
-import * as CountrySelectors from '../../ngrx/country.selector'
+import * as CountrySelectors from '../../ngrx/country.selector';
 
 @Component({
   selector: 'app-total',

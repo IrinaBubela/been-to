@@ -7,7 +7,10 @@ import {
   ApexLegend,
   NgxApexchartsModule
 } from 'ngx-apexcharts';
-import { MapService } from '../../services/map/map.service';
+import * as CountrySelectors from '../../ngrx/country.selector'
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { CountryState } from '../../ngrx/country.reducer';
 
 const TOTAL_COUNTRIES = 195;
 
@@ -60,21 +63,24 @@ export class ChartsComponent implements OnInit {
   };
 
   constructor(
-    private readonly mapService: MapService,
+    public countries$: Observable<string[]> = new Observable<string[]>,
     private readonly cdRef: ChangeDetectorRef,
+    private readonly store: Store<{ countryState: CountryState }>,
   ) { }
 
   ngOnInit(): void {
-    this.getVisitedCountries();
+    // this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
+
+    // this.countries$.subscribe(countries => {
+    //   this.totalCountOfCountries = countries.length;
+    //   this.cdRef.detectChanges();
+    // });
+    this.defineVisitedCountries();
   }
 
-  public getVisitedCountries(): void {
-    this.mapService.getTotalCountriesSelected()
-      .subscribe(totalNum => {
-        this.totalCountOfCountries = totalNum;
-        this.remainingCountries = TOTAL_COUNTRIES - this.totalCountOfCountries;
-        this.chartSeries = [this.totalCountOfCountries, this.remainingCountries]
-        this.cdRef.detectChanges();
-      });
+  public defineVisitedCountries(): void {
+    this.remainingCountries = TOTAL_COUNTRIES - this.totalCountOfCountries;
+    this.chartSeries = [this.totalCountOfCountries, this.remainingCountries]
+    this.cdRef.detectChanges();
   }
 }
