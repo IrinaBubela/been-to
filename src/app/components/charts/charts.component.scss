@@ -1,23 +1,22 @@
 .container {
-    padding: 20px;
-  }
-  
-  .row {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .col-md-6 {
-    flex: 1;
-    padding: 20px;
-  }
-  
-  h2 {
-    text-align: center;
-  }
-  
-  p {
-    font-size: 16px;
-    margin: 10px 0;
-  }
-  
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+}
+
+.col-md-6 {
+  flex: 1;
+  padding: 20px;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+  margin: 10px 0;
+}

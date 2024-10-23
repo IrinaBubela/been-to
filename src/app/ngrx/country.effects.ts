@@ -29,7 +29,8 @@ export class CountryEffects {
           map(countries => CountryActions.removeCountrySuccess({ countries })),
           catchError(error => of(CountryActions.removeCountryFailure({ error })))
         )
-      })
+      }
+      )
     )
   );
 

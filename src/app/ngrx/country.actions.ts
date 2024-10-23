@@ -37,3 +37,7 @@ export const removeCountryFailure = createAction(
   '[Country] Remove Country Failure',
   props<{ error: any }>()
 );
+export const login = createAction('[Auth] Login');
+export const logout = createAction('[Auth] Logout');
+
+export const resetCountries = createAction('[Countries] Reset Countries');

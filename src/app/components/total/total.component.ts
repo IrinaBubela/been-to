@@ -35,6 +35,6 @@ export class TotalComponent implements OnInit {
   }
 
   get planningPercentage(): number {
-    return (this.totalCountOfCountries / this.maxCountries) * 100;
+    return 0;
   }
 }

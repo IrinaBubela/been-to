@@ -8,6 +8,7 @@ import { select, Store } from '@ngrx/store';
 import { CountryState } from '../../ngrx/country.reducer';
 
 import * as CountryActions from '../../ngrx/country.actions';
+import { logout, resetCountries } from '../../ngrx/country.actions';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -34,12 +35,11 @@ export class NavigationBarComponent implements OnInit {
     this.authSubscription = this.authService.currentUser.subscribe(user => {
       this.currentUser = user;
     });
+    
     // Select the countries directly from the store
     this.countries$ = this.store.pipe(select(CountrySelectors.selectAllCountries));
 
     this.countries$.subscribe(countries => {
-      console.log('countries', countries);
-      
       this.totalCountOfCountries = countries.length;
       this.cdRef.detectChanges();
     });
@@ -54,5 +54,8 @@ export class NavigationBarComponent implements OnInit {
   public logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+
+    this.store.dispatch(logout());
+    this.store.dispatch(resetCountries());
   }
 }

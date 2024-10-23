@@ -28,12 +28,25 @@ export const countryReducer = createReducer(
       countries: [...state.countries, country]
     };
   }),
+
   on(CountryActions.removeCountry, (state, { country }) => ({
     ...state,
     countries: state.countries.filter(c => c !== country)
   })),
+
   on(CountryActions.fetchCountriesFailure, (state, { error }) => ({
     ...state,
     error
+  })),
+
+  on(CountryActions.logout, (state) => ({
+    ...state,
+    countries: [],
+    error: undefined
+  })),
+
+  on(CountryActions.resetCountries, (state) => ({
+    ...state,
+    countries: [] // Reset countries to an empty array (on logout e.g.)
   }))
 );

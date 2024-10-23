@@ -7,7 +7,7 @@ import {
   ApexLegend,
   NgxApexchartsModule
 } from 'ngx-apexcharts';
-import * as CountrySelectors from '../../ngrx/country.selector'
+import * as CountrySelectors from '../../ngrx/country.selector';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { CountryState } from '../../ngrx/country.reducer';
@@ -62,25 +62,36 @@ export class ChartsComponent implements OnInit {
     offsetY: 10
   };
 
+  public countries$: Observable<string[]>;
+
   constructor(
-    public countries$: Observable<string[]> = new Observable<string[]>,
     private readonly cdRef: ChangeDetectorRef,
-    private readonly store: Store<{ countryState: CountryState }>,
+    private readonly store: Store<{ countryState: CountryState }>
   ) { }
 
   ngOnInit(): void {
-    // this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
+    this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
 
-    // this.countries$.subscribe(countries => {
-    //   this.totalCountOfCountries = countries.length;
-    //   this.cdRef.detectChanges();
-    // });
-    this.defineVisitedCountries();
+    this.countries$.subscribe(countries => {
+      this.totalCountOfCountries = countries.length;
+      this.defineVisitedCountries();
+      this.cdRef.detectChanges();
+    });
   }
 
   public defineVisitedCountries(): void {
     this.remainingCountries = TOTAL_COUNTRIES - this.totalCountOfCountries;
-    this.chartSeries = [this.totalCountOfCountries, this.remainingCountries]
+
+    console.log('Total Countries:', this.totalCountOfCountries);
+    console.log('Remaining Countries:', this.remainingCountries);
+
+    // Ensure these are valid numbers before assigning
+    if (this.totalCountOfCountries >= 0 && this.remainingCountries >= 0) {
+      this.chartSeries = [this.totalCountOfCountries, this.remainingCountries];
+    } else {
+      console.error('Invalid country counts:', this.totalCountOfCountries, this.remainingCountries);
+    }
+
     this.cdRef.detectChanges();
   }
 }

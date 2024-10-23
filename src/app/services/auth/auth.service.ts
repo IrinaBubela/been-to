@@ -41,7 +41,6 @@ export class AuthService {
   public logout() {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
   }
 
   public getUserIdFromToken(): string | null {

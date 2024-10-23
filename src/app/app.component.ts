@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from './services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
 import { MapComponent } from './components/map/map.component';
 import { CountryListComponent } from './components/country-list/country-list.component';
 import { Observable } from 'rxjs';
 import { RouterLinkActive, RouterOutlet } from '@angular/router';
-import { environment } from '../environments/environment';
 import { select, Store } from '@ngrx/store';
 import { CountryState } from './ngrx/country.reducer';
 import * as CountryActions from './ngrx/country.actions';
-import * as CountrySelectors from './ngrx/country.selector'
+import * as CountrySelectors from './ngrx/country.selector';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +25,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private readonly store: Store<{ countryState: CountryState }>,
-    private readonly authService: AuthService,
   ) {
     this.store.dispatch(CountryActions.fetchCountries());
 
@@ -39,9 +36,4 @@ export class AppComponent implements OnInit {
     });
   }
   public ngOnInit(): void { }
-
-  public logout() {
-    this.authService.logout();
-    this.isLoggedIn = false;
-  }
 }

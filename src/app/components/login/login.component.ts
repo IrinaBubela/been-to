@@ -3,6 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import * as CountryActions from '../../ngrx/country.actions';
+import { CountryState } from '../../ngrx/country.reducer';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +21,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private readonly store: Store<{ countryState: CountryState }>,
   ) {
     this.createForm();
   }
@@ -48,6 +52,7 @@ export class LoginComponent implements OnInit {
       next: (data) => {
         console.log(data, 'data');
         this.router.navigate(['/']);
+        this.store.dispatch(CountryActions.fetchCountries());
       },
       error: (error) => {
         console.error('Error logging in', error);
