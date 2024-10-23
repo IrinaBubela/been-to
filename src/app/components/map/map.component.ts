@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { CommonModule } from '@angular/common';
-import * as AuthActions from '../../auth/auth.actions';
+import * as CountryActions from '../../ngrx/country.actions';
 import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
-import { MapService } from '../../services/map/map.service';
-import { CountriesService } from '../../services/auth/countries.service';
-import { environment } from '../../../environments/environment'; // Import the environment config
-/* global google */
+import * as CountrySelectors from '../../ngrx/country.selector';
+import { CountryState } from '../../ngrx/country.reducer';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -20,34 +19,40 @@ export class MapComponent implements OnInit {
   private highlightedCountries: Set<string> = new Set();
   public totalCountOfCountries: number;
   public countries$: Observable<string[]> = new Observable<string[]>();
-  public selectedCountries: string[];
+  public selectedCountries: string[] = [];
+  private map: any;
 
   constructor(
-    private readonly store: Store<{ countries: string[] }>,
-    private readonly mapService: MapService,
-    private readonly countriesService: CountriesService,
+    private readonly store: Store<{ countryState: CountryState }>,
     private readonly cdRef: ChangeDetectorRef,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loadGoogleMapsScript().then(() => {
       this.initMap();
-      this.getSelectedState();
     });
 
-    this.countriesService.getCountries().subscribe(data => {
-      this.selectedCountries = data;
+    this.store.dispatch(CountryActions.fetchCountries());
+
+    this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
+    this.countries$.subscribe((countries) => {
+      this.selectedCountries = countries;
+      this.highlightedCountries = new Set(countries);
+      this.cdRef.detectChanges();
+
+      if (this.map) {
+        this.highlightCountriesOnMap();
+      }
     });
   }
 
-  // Function to load Google Maps script dynamically
   private loadGoogleMapsScript(): Promise<void> {
     return new Promise((resolve, reject) => {
       if ((window as any).google && (window as any).google.maps) {
-        resolve(); // If the script is already loaded
+        resolve();
       } else {
         const script = document.createElement('script');
-        // Use the API key from environment variables
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&libraries=geometry`; // Add geometry library
         script.onload = () => resolve();
         script.onerror = (error) => reject(error);
         document.body.appendChild(script);
@@ -55,20 +60,14 @@ export class MapComponent implements OnInit {
     });
   }
 
-  public getSelectedState(): void {
-    this.mapService.getTotalCountriesSelected()
-      .subscribe(totalNum => {
-        this.totalCountOfCountries = totalNum;
-        this.cdRef.detectChanges();
-      });
-  }
-
   public initMap(): void {
-    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-    map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
-
-    this.addStyleForSelectingCountries(map);
-    this.addFunctionalityToMap(map);
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+      this.map = new google.maps.Map(mapElement, mapOptions);
+      this.addFunctionalityToMap(this.map);
+      this.map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
+      this.addStyleForSelectingCountries(this.map);
+    }
   }
 
   public addFunctionalityToMap(map: any): void {
@@ -78,50 +77,50 @@ export class MapComponent implements OnInit {
         return;
       }
 
-      const countryCode = event.feature.Gg;
+      if (!countryName) return;
+
       if (this.highlightedCountries.has(countryName)) {
         this.removeHighlight(map, countryName);
         this.highlightedCountries.delete(countryName);
-        this.store.dispatch(AuthActions.removeCountry({ country: countryName }));
-
-        this.countriesService.removeCountry(countryCode)
-          .subscribe(
-            (data) => console.log(data, 'data'),
-            (err) => console.log(err, 'err'),
-          );
+        this.store.dispatch(CountryActions.removeCountry({ country: countryName }));
       } else {
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
-        this.store.dispatch(AuthActions.addCountry({ country: countryName }));
-
-        this.countriesService.addCountry(countryCode)
-          .subscribe(data => console.log(data, 'data'));
+        this.store.dispatch(CountryActions.addCountry({ country: countryName }));
       }
     });
   }
 
   public addStyleForSelectingCountries(map: any): void {
-    map.data.setStyle(() => {
-      return {
-        fillColor: '#eeeeee',
-        strokeColor: '#3f4242',
-        strokeWeight: 1,
-      };
-    });
+    map.data.setStyle((feature: any) => ({
+      fillColor: this.highlightedCountries.has(feature.getProperty('name')) ? '#EAC452' : '#eeeeee',
+      strokeColor: '#3f4242',
+      strokeWeight: 1,
+    }));
   }
 
-  public highlightCountry(map: any, countryName: string, color: string) {
-    map.data.forEach((feature: any) => {
-      if (feature.getProperty('name') === countryName) {
-        map.data.overrideStyle(feature, { fillColor: color });
+  public highlightCountriesOnMap(): void {
+    this.map.data.forEach((feature: any) => {
+      if (this.highlightedCountries.has(feature.getProperty('name'))) {
+        this.map.data.overrideStyle(feature, { fillColor: '#EAC452', strokeWeight: 1 });
+      } else {
+        this.map.data.overrideStyle(feature, { fillColor: '#eeeeee', strokeWeight: 1 });
       }
     });
   }
 
-  public removeHighlight(map: any, countryName: string) {
+  public highlightCountry(map: any, countryName: string, color: string): void {
+    map.data.forEach((feature: any) => {
+      if (feature.getProperty('name') === countryName) { 
+        map.data.overrideStyle(feature, { fillColor: color, strokeWeight: 1 });
+      }
+    });
+  }
+
+  public removeHighlight(map: any, countryName: string): void {
     map.data.forEach((feature: any) => {
       if (feature.getProperty('name') === countryName) {
-        map.data.overrideStyle(feature, { fillColor: 'none' });
+        map.data.overrideStyle(feature, { fillColor: '#eeeeee', strokeWeight: 1 });
       }
     });
   }
