@@ -24,12 +24,12 @@ export class CountryEffects {
   removeCountry$ = createEffect(() =>
     this.actions$.pipe(
       ofType(CountryActions.removeCountry),
-      mergeMap(action =>
-        this.countryService.removeCountry(action.country).pipe(
+      mergeMap(action => {
+        return this.countryService.removeCountry(action.country).pipe(
           map(countries => CountryActions.removeCountrySuccess({ countries })),
           catchError(error => of(CountryActions.removeCountryFailure({ error })))
         )
-      )
+      })
     )
   );
 

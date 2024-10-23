@@ -6,6 +6,7 @@ import { mapOptions } from '../../map-options';
 import { Observable } from 'rxjs';
 import * as CountrySelectors from '../../ngrx/country.selector';
 import { CountryState } from '../../ngrx/country.reducer';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -19,6 +20,7 @@ export class MapComponent implements OnInit {
   public totalCountOfCountries: number;
   public countries$: Observable<string[]> = new Observable<string[]>();
   public selectedCountries: string[] = [];
+  private map: any;
 
   constructor(
     private readonly store: Store<{ countryState: CountryState }>,
@@ -32,16 +34,13 @@ export class MapComponent implements OnInit {
 
     this.store.dispatch(CountryActions.fetchCountries());
 
-    // Subscribe to countries from the state and highlight them on the map
     this.countries$ = this.store.select(CountrySelectors.selectAllCountries);
     this.countries$.subscribe((countries) => {
-      console.log('Fetched countries from state:', countries);
       this.selectedCountries = countries;
+      this.highlightedCountries = new Set(countries);
       this.cdRef.detectChanges();
 
-      this.highlightedCountries = new Set(countries);
-      // Once countries are received, highlight them on the map
-      if ((window as any).google && (window as any).google.maps) {
+      if (this.map) {
         this.highlightCountriesOnMap();
       }
     });
@@ -53,6 +52,7 @@ export class MapComponent implements OnInit {
         resolve();
       } else {
         const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}&libraries=geometry`; // Add geometry library
         script.onload = () => resolve();
         script.onerror = (error) => reject(error);
         document.body.appendChild(script);
@@ -61,26 +61,13 @@ export class MapComponent implements OnInit {
   }
 
   public initMap(): void {
-
-    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-    this.addFunctionalityToMap(map);
-    map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
-
-    this.addStyleForSelectingCountries(map);
-  }
-
-  public highlightCountriesOnMap(): void {
-    const map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-    this.addFunctionalityToMap(map);
-    map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json', null, () => {
-      this.selectedCountries.forEach((countryName) => {
-        this.highlightCountry(map, countryName, '#EAC452');
-      });
-    });
-
-    this.addStyleForSelectingCountries(map);
+    const mapElement = document.getElementById('map');
+    if (mapElement) {
+      this.map = new google.maps.Map(mapElement, mapOptions);
+      this.addFunctionalityToMap(this.map);
+      this.map.data.loadGeoJson('https://raw.githubusercontent.com/johan/world.geo.json/master/countries.geo.json');
+      this.addStyleForSelectingCountries(this.map);
+    }
   }
 
   public addFunctionalityToMap(map: any): void {
@@ -90,46 +77,50 @@ export class MapComponent implements OnInit {
         return;
       }
 
-      console.log('highlightedCountries', this.highlightedCountries);
-
+      if (!countryName) return;
 
       if (this.highlightedCountries.has(countryName)) {
-        console.log('remove country');
-
         this.removeHighlight(map, countryName);
         this.highlightedCountries.delete(countryName);
         this.store.dispatch(CountryActions.removeCountry({ country: countryName }));
       } else {
         this.highlightCountry(map, countryName, '#EAC452');
         this.highlightedCountries.add(countryName);
-
         this.store.dispatch(CountryActions.addCountry({ country: countryName }));
       }
     });
   }
 
   public addStyleForSelectingCountries(map: any): void {
-    map.data.setStyle(() => {
-      return {
-        fillColor: '#eeeeee',
-        strokeColor: '#3f4242',
-        strokeWeight: 1,
-      };
-    });
+    map.data.setStyle((feature: any) => ({
+      fillColor: this.highlightedCountries.has(feature.getProperty('name')) ? '#EAC452' : '#eeeeee',
+      strokeColor: '#3f4242',
+      strokeWeight: 1,
+    }));
   }
 
-  public highlightCountry(map: any, countryName: string, color: string) {
-    map.data.forEach((feature: any) => {
-      if (feature.getProperty('name') === countryName) {
-        map.data.overrideStyle(feature, { fillColor: color });
+  public highlightCountriesOnMap(): void {
+    this.map.data.forEach((feature: any) => {
+      if (this.highlightedCountries.has(feature.getProperty('name'))) {
+        this.map.data.overrideStyle(feature, { fillColor: '#EAC452', strokeWeight: 1 });
+      } else {
+        this.map.data.overrideStyle(feature, { fillColor: '#eeeeee', strokeWeight: 1 });
       }
     });
   }
 
-  public removeHighlight(map: any, countryName: string) {
+  public highlightCountry(map: any, countryName: string, color: string): void {
+    map.data.forEach((feature: any) => {
+      if (feature.getProperty('name') === countryName) { 
+        map.data.overrideStyle(feature, { fillColor: color, strokeWeight: 1 });
+      }
+    });
+  }
+
+  public removeHighlight(map: any, countryName: string): void {
     map.data.forEach((feature: any) => {
       if (feature.getProperty('name') === countryName) {
-        map.data.overrideStyle(feature, { fillColor: 'none' });
+        map.data.overrideStyle(feature, { fillColor: '#eeeeee', strokeWeight: 1 });
       }
     });
   }

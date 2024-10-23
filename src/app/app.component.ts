@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { NavigationBarComponent } from './components/navigation-bar/navigation-bar.component';
@@ -28,32 +28,17 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly store: Store<{ countryState: CountryState }>,
     private readonly authService: AuthService,
-    private readonly cdRef: ChangeDetectorRef,
-    private readonly renderer: Renderer2
   ) {
-    console.log('hi');
-
     this.store.dispatch(CountryActions.fetchCountries());
 
     // Select the countries from the store
     this.countries$ = this.store.pipe(select(CountrySelectors.selectAllCountries));
 
     this.countries$.subscribe(countries => {
-      console.log('countries', countries);
-      
       this.totalCountOfCountries = countries.length;
     });
   }
-  public ngOnInit(): void {
-
-    const script = this.renderer.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.googleMapsApiKey}`;
-    script.async = true;
-    script.defer = true;
-
-    const googleMapsScriptElement = this.renderer.selectRootElement('#googleMapsScript', true);
-    this.renderer.appendChild(googleMapsScriptElement, script);
-  }
+  public ngOnInit(): void { }
 
   public logout() {
     this.authService.logout();

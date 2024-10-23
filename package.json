@@ -55,7 +55,7 @@
     "@angular/compiler-cli": "^17.2.0",
     "@types/d3": "^7.4.3",
     "@types/google__maps": "^0.5.20",
-    "@types/google.maps": "^3.55.12",
+    "@types/google.maps": "^3.58.1",
     "@types/googlemaps": "^3.43.3",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^22.1.0",
