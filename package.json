@@ -12,12 +12,12 @@
   },
   "private": true,
   "dependencies": {
-    "@agm/core": "^3.0.0-beta.0",
     "@angular/animations": "^17.2.0",
     "@angular/common": "^17.2.0",
     "@angular/compiler": "^17.2.0",
     "@angular/core": "^17.2.0",
     "@angular/forms": "^17.2.0",
+    "@angular/google-maps": "^18.2.10",
     "@angular/platform-browser": "^17.2.0",
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/router": "^17.2.0",
@@ -43,11 +43,14 @@
     "mongoose": "^8.5.2",
     "ng2-charts": "^6.0.1",
     "ngx-apexcharts": "^0.6.9",
+    "ngx-google-maps": "^0.0.1",
+    "node": "^16.20.0",
     "rxjs": "~7.8.0",
     "three": "^0.166.1",
     "three-globe": "^2.31.1",
     "topojson-client": "^3.1.0",
     "tslib": "^2.3.0",
+    "typescript": "^5.2.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
@@ -67,8 +70,7 @@
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
-    "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "^5.4.2"
+    "karma-jasmine-html-reporter": "~2.1.0"
   },
   "engines": {
     "node": "20.10.0"
